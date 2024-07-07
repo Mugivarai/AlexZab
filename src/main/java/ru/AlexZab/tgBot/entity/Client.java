@@ -3,7 +3,7 @@ package ru.AlexZab.tgBot.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "client")
+@Table(name = "Сlient")
 public class Client {
 
     @Id
