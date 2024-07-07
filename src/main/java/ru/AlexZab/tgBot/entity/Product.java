@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "Product")
 public class Product {
 
     @Id
