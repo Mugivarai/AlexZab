@@ -1,6 +1,7 @@
 package ru.AlexZab.tgBot.entity;
 
 import jakarta.persistence.*;
+import org.jetbrains.annotations.Contract;
 
 @Entity
 @Table(name = "OrderProduct")
@@ -8,7 +9,7 @@ public class OrderProduct {
 
     @Id
     @GeneratedValue
-    private Long ID;
+    private Long id;
 
     @Column(nullable = false)
     private Integer countProduct;
@@ -19,12 +20,22 @@ public class OrderProduct {
     @ManyToOne
     private ClientOrder clientOrder;
 
-    public Long getID() {
-        return ID;
+    @Contract(pure = true)
+    public OrderProduct(Integer countProduct, Product product, ClientOrder clientOrder) {
+        this.countProduct = countProduct;
+        this.product = product;
+        this.clientOrder = clientOrder;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    @Contract(pure = true)
+    public OrderProduct(){}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getCountProduct() {

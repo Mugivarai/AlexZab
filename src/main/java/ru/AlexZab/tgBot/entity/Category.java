@@ -9,7 +9,7 @@ public class Category {
 
     @Id
     @GeneratedValue
-    private Long ID;
+    private Long id;
 
     @Column(nullable = false, unique = true,length = 50)
     private String name;
@@ -26,12 +26,12 @@ public class Category {
     @Contract(pure = true)
     public Category(){}
 
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
