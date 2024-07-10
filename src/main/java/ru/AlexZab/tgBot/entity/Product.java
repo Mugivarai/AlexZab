@@ -10,7 +10,7 @@ public class Product {
 
     @Id
     @GeneratedValue
-    private Long ID;
+    private Long id;
 
     @Column(nullable = false,unique = true,length = 50)
     private String name;
@@ -35,12 +35,12 @@ public class Product {
     @Contract
     public Product(){}
 
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

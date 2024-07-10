@@ -1,14 +1,15 @@
 package ru.AlexZab.tgBot.entity;
 
 import jakarta.persistence.*;
+import org.jetbrains.annotations.Contract;
 
 @Entity
-@Table(name = "Сlient")
+@Table(name = "Client")
 public class Client {
 
     @Id
     @GeneratedValue
-    private Long ID;
+    private Long id;
 
     @Column(nullable = false)
     private Long externalId;
@@ -22,12 +23,23 @@ public class Client {
     @Column(nullable = false, length = 400)
     private String address;
 
-    public Long getID() {
-        return ID;
+    @Contract(pure = true)
+    public Client(Long externalId, String fullName, String phoneNumber, String address) {
+        this.externalId = externalId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    @Contract(pure = true)
+    public Client(){}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getExternalId() {

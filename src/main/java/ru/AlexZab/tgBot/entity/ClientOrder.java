@@ -1,6 +1,7 @@
 package ru.AlexZab.tgBot.entity;
 
 import jakarta.persistence.*;
+import org.jetbrains.annotations.Contract;
 
 import java.math.BigDecimal;
 
@@ -10,7 +11,7 @@ public class ClientOrder {
 
     @Id
     @GeneratedValue
-    private Long ID;
+    private Long id;
 
     @Column(nullable = false)
     private Integer status;
@@ -21,12 +22,22 @@ public class ClientOrder {
     @ManyToOne
     private Client client;
 
-    public Long getID() {
-        return ID;
+    @Contract(pure = true)
+    public ClientOrder(Integer status, BigDecimal total, Client client) {
+        this.status = status;
+        this.total = total;
+        this.client = client;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    @Contract(pure = true)
+    public ClientOrder(){}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getStatus() {
