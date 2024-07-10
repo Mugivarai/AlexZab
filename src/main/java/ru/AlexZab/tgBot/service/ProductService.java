@@ -13,7 +13,6 @@ import java.util.List;
 @Transactional
 public class ProductService {
 
-    @Autowired
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {

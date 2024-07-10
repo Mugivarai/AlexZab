@@ -19,12 +19,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> getProductsByName(@Param("name") String name);
 
     @Query(value = "SELECT PRODUCT.* " +
-            "FROM PRODUCT " +
-            "JOIN (SELECT PRODUCT_ID, SUM(COUNT_PRODUCT) " +
-                "FROM " +
-                "ORDER_PRODUCT GROUP BY PRODUCT_ID ORDER BY SUM(COUNT_PRODUCT) DESC) sort " +
-            "ON PRODUCT.ID = sort.PRODUCT_ID  " +
-            "LIMIT :limit",nativeQuery = true)
+            "FROM ORDER_PRODUCT sort " +
+            "JOIN PRODUCT ON sort.PRODUCT_ID = PRODUCT.ID " +
+            "GROUP BY PRODUCT_ID " +
+            "ORDER BY SUM(COUNT_PRODUCT) DESC " +
+            "LIMIT :limit ",nativeQuery = true)
     List<Product> getPopularProducts(Integer limit);
 
     @Query(value = "SELECT DISTINCT p.* FROM PRODUCT p " +

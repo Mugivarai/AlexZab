@@ -16,13 +16,10 @@ import java.util.List;
 @Transactional
 public class ClientService {
 
-    @Autowired
     private final ClientRepository clientRepository;
 
-    @Autowired
     private final ProductRepository productRepository;
 
-    @Autowired
     private final ClientOrderRepository clientOrderRepository;
 
     public ClientService(

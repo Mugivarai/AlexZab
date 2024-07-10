@@ -33,10 +33,7 @@ public class ProductRestController {
     }
 
     @GetMapping("/popular")
-    List<Product> getPopularProducts(
-            @RequestParam(value = "limit")
-            Integer limit
-    ){
+    List<Product> getPopularProducts(@RequestParam(value = "limit") Integer limit){
         return productService.getPopularProducts(limit);
     }
 
