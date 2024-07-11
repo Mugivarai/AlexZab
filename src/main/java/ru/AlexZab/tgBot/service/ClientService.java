@@ -1,7 +1,6 @@
 package ru.AlexZab.tgBot.service;
 
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.AlexZab.tgBot.entity.Client;
 import ru.AlexZab.tgBot.entity.ClientOrder;
@@ -42,6 +41,14 @@ public class ClientService {
 
     public List<Client> getClientByName(String name){
         return clientRepository.getClientByName(name);
+    }
+
+    public Client getClientByExternalId(Long id){
+        return clientRepository.getClientByExternalId(id);
+    }
+
+    public void save(Client client){
+        clientRepository.save(client);
     }
 
 }
