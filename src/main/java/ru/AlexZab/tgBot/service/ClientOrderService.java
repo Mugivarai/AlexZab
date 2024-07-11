@@ -25,7 +25,7 @@ public class ClientOrderService {
         return clientOrderRepository.getClientByStatusAndId(id);
     }
 
-    public void updateStatus(Long id, BigDecimal price){
+    public void closeOrder(Long id, BigDecimal price){
         clientOrderRepository.updateStatusAndPrice(id,price);
     }
 

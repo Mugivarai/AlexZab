@@ -37,7 +37,7 @@ public class TgBotService {
 
     private final OrderProductService orderProductService;
 
-    private final List<String> allCategories;
+    private List<String> allCategories;
 
     //Временные переменные для регистрации пользователя
     private final Map<Long,Registration> userRegistrationMap = new HashMap<>();
@@ -95,6 +95,12 @@ public class TgBotService {
             return;
         }
 
+
+        allCategories = categoryService.getNameAllCategories()
+                .stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
+        
         //Проверка. Является ли категория листом или узлом
         if(allCategories.contains(update.message().text().toLowerCase())){
             if(categoryService.hasChildCategories(
@@ -136,36 +142,30 @@ public class TgBotService {
                     userStateMap.put(id, userState);
                     bot.execute(message);
                 }
-                break;
             }
 
             case "привет" -> {
                 String temp = "Привет, я готов стать твоим помощиком!";
                 SendMessage message = new SendMessage(id,temp);
                 bot.execute(message);
-                break;
             }
 
             case "пока" -> {
                 String temp = "Приятного аппетита!";
                 SendMessage message = new SendMessage(id,temp);
                 bot.execute(message);
-                break;
             }
 
             case "в основное меню" , "меню" -> {
                 mainMenu(id);
-                break;
             }
 
             case "каталог еды" -> {
                 catalogEat(id);
-                break;
             }
 
             case "оформить заказ" ->{
                 createOrder(id);
-                break;
             }
 
             default -> {
@@ -174,7 +174,6 @@ public class TgBotService {
                 SendMessage message = new SendMessage(id,
                         "Я не знаю что делать").replyMarkup(keyboard);
                 bot.execute(message);
-                break;
             }
         }
 
@@ -209,7 +208,7 @@ public class TgBotService {
             Client client = new Client(id,temp.fullName, temp.phone, temp.address);
             clientService.save(client);
 
-            ClientOrder clientOrder = new ClientOrder(1,BigDecimal.valueOf(0),client);
+            ClientOrder clientOrder = new ClientOrder(1,client);
             clientOrderService.save(clientOrder);
 
             userRegistrationMap.remove(id);
@@ -263,10 +262,10 @@ public class TgBotService {
         bot.execute(message);
     }
 
-    private void catalogProduct(long id,String str){
-        str = str.toLowerCase();
+    private void catalogProduct(long id,String message){
+        message = message.toLowerCase();
         List<Product> products = productService.getProductsByCategoryId(
-                categoryService.getIdCategoryByName(str)
+                categoryService.getIdCategoryByName(message)
         );
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         for(Product product: products){
@@ -302,9 +301,14 @@ public class TgBotService {
 
     private void createOrder(Long id){
 
+
         Long clientId = clientService.getClientByExternalId(id).getId();
         Long clientOrderId = clientOrderService.getClientOrderByClientIdAndStatusOne(clientId).getId();
-        BigDecimal total = orderProductService.getTotalOrderProduct(clientOrderId); // Используем BigDecimal вместо Double
+        if(orderProductService.getTotalOrderProduct(clientOrderId)==null){
+            bot.execute(new SendMessage(id,"Ваш заказ пуст"));
+            return;
+        }
+        BigDecimal total = orderProductService.getTotalOrderProduct(clientOrderId);
         List<Object[]> results = orderProductService.findOrderProductDetails(clientOrderId);
 
         String temp = "";
@@ -317,13 +321,13 @@ public class TgBotService {
             BigDecimal totalProductPrice = price.multiply(countBigDecimal); // Умножаем BigDecimal на BigDecimal
 
             temp += String.format("%s: %d * %.2f = %.2f руб.\n", productName, countProduct,
-                    price.doubleValue(), totalProductPrice.doubleValue()); // Преобразуем BigDecimal в double для форматирования вывода
+                    price.doubleValue(), totalProductPrice.doubleValue());
         }
-        temp += String.format("Итого: %.2f", total.doubleValue()); // Преобразуем BigDecimal в double для форматирования вывода
+        temp += String.format("Итого: %.2f", total.doubleValue());
         bot.execute(new SendMessage(id, temp));
-        clientOrderService.updateStatus(clientId,total);
+        clientOrderService.closeOrder(clientId,total);
 
-        ClientOrder clientOrder = new ClientOrder(1,BigDecimal.valueOf(0),
+        ClientOrder clientOrder = new ClientOrder(1,
                 clientService.getClientByExternalId(id));
         clientOrderService.save(clientOrder);
 
