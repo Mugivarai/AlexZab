@@ -32,6 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "WHERE co.CLIENT_ID = :id",nativeQuery = true)
     List<Product> getClientProducts(Long id);
 
-
+    @Query("SELECT p FROM Product p WHERE p.id = :id")
+    Product getProductById(Long id);
 
 }

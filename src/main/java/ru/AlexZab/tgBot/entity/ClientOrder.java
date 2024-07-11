@@ -30,6 +30,13 @@ public class ClientOrder {
     }
 
     @Contract(pure = true)
+    public  ClientOrder(Integer status, Client client){
+        this.status = status;
+        this.total = BigDecimal.valueOf(0);
+        this.client = client;
+    }
+
+    @Contract(pure = true)
     public ClientOrder(){}
 
     public Long getId() {
